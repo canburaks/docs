@@ -19,7 +19,14 @@
     "options": ["copy", "view", "assistant", "mcp", "add-mcp"]
   },
   "navigation": {
-    "groups": []
+    "tabs": [
+      {
+        "tab": "Dev Prompts",
+        "pages": [
+          "development-prompts"
+        ]
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
