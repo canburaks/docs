@@ -1,0 +1,26 @@
+---
+title: "Software Development (Generic)"
+---
+
+<Prompt description="Software Principles" icon="code-xml" actions={["copy"]}>
+<principles>
+- MOST IMPORTANT: **Modular design**: Create reusable, modular components separation of concern in mind.
+### 1.1 Core Architectural Principles
+
+Software architecture serves as the foundation upon which all development work is built. Effective architecture adheres to these essential principles:
+
+**Separation of Concerns**: Divide your system into distinct sections, each addressing a specific aspect of the functionality. This creates cleaner abstractions, simplifies maintenance, and enables parallel development.
+
+**Single Responsibility Principle**: Each component/function/method/interface should have one and only one reason to change. When a module has a single focus, it becomes more stable, understandable, and testable.
+
+**Don't Repeat Yourself (DRY)**: Eliminate duplication by abstracting common functionality. Each piece of knowledge should have a single, unambiguous representation within a system.
+
+**KISS (Keep It Simple, Stupid)**: Simplicity should be a key goal in design. Choose straightforward solutions over complex ones whenever possible. Simple solutions are easier to understand, maintain, and debug. Sometimes simplicity is confused with 'easy to understand". For example, a two-line solution which uses recursion is a pretty simple, even though some people might find it easier to work through a 10-line solution which avoids recursion.
+
+**YAGNI (You Aren't Gonna Need It)**: Avoid building functionality on speculation. Implement features only when they are needed, not when you anticipate they might be useful in the future.
+
+**Open/Closed Principle**: Software entities should be open for extension but closed for modification. Design your systems so that new functionality can be added with minimal changes to existing code.
+
+**Dependency Inversion**: High-level modules should not depend on low-level modules. Both should depend on abstractions. This principle enables flexibility and testability.
+</principles>
+</Prompt>

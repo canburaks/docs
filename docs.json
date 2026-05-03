@@ -22,8 +22,14 @@
     "tabs": [
       {
         "tab": "Dev Prompts",
-        "pages": [
-          "development-prompts"
+        "groups": [
+          {
+            "group": "Development Prompts",
+            "pages": [
+              "software-development",
+              "python-development"
+            ]
+          }
         ]
       }
     ]

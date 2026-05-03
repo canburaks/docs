@@ -1,0 +1,166 @@
+---
+title: "Python Development"
+---
+
+<Prompt description="Python Development Rules" icon="code" actions={["copy"]}>
+<python_rules>  
+## Code Style Guidelines
+- Python 3.12+ required
+- Line length: 88 characters
+- Use double quotes for strings
+- Indent with spaces (not tabs)
+- Follow black formatting style
+- Type annotations required for functions
+- Import style: sort imports with isort profile "black"
+- Error handling: use structured logging with structlog
+- Naming: snake_case for variables/functions, PascalCase for classes
+- Use Pydantic for data modeling and validation
+- Follow FastAPI conventions for API endpoints
+- Always define enums using Python's Enum class
+- Prefer tuples rather than lists.
+- I always use `uv` as my package/environment/project manager for Python projects. (See below)
+- **File handling**: Prefer `pathlib.Path` over `os.path`
+- **Function arguments**: Avoid mutable default arguments
+- **File structure**: NEVER put docstrings or explanations on top of any file. At the top, only imports are allowed. All file documentation should be placed in CLAUDE.md instead.
+- Do not catch exceptions unless explicitly told to.
+- Write concise, short, minimal code.
+- This repository rewards minimal code. Try to be as concise as possible.
+
+## COMMENTS
+- A good comment explains **why** something is done, not **what** the code does.
+
+
+## TEST STYLE
+1. <IMPORTANT>Do not mock/patch anything that you're not explicitly asked to do</IMPORTANT>
+2. Avoid writing trivial tests. Every test should test for at least one, preferably multiple points of failure
+3. Avoid splitting up code in multiple lines like this: `a=func()\n assert a=b`. Instead, just do `assert func() == b`
+4. The first argument to `pytest.mark.parametrize` should be a tuple (not a string! not a list!), the second argument must be a list (not a tuple!).
+- Test the inputs and outputs, not the internals.
+- Each test should check one thing.
+- When you monkey-patch a dependency, always use `try/finally` to restore the original.
+- Always create a fresh state for each test, either by calling a factory function or by using setup/teardown.
+
+## ALWAYS USE `uv`
+**Always use `uv` instead of `pip` or `python`** for package management:
+- `uv add` for adding dependencies
+- `uv remove` for removing dependencies
+- `uv run` to execute commands in the virtual environment
+- `uv run <script.py>` to run Python scripts
+
+## TYPE HINTS
+- For arguments, prefer protocols and abstract types (`Mapping`, `Sequence`, `Iterable`, etc.). If an argument accepts literally any value, use `object` instead of `Any`.
+- For return values, prefer concrete types (`list`, `dict`, etc.) for concrete implementations. The return values of protocols and abstract base classes must be judged on a case-by-case basis.
+
+Yes:
+	```python
+	def map_it(input: Iterable[str]) -> list[int]: ...
+	def create_map() -> dict[str, int]: ...
+	def to_string(o: object) -> str: ...  # accepts any object
+	```
+
+No:
+	```python
+	def map_it(input: list[str]) -> list[int]: ...
+	def create_map() -> MutableMapping[str, int]: ...
+	def to_string(o: Any) -> str: ...
+	```
+
+Maybe:
+	```python
+	class MyProto(Protocol):
+	    def foo(self) -> list[int]: ...
+	    def bar(self) -> Mapping[str, str]: ...
+	```
+	
+## Code Examples
+### Utilize Abstract Base Classes if necessary:
+	```python
+	from abc import ABC, abstractmethod
+	from typing import Any
+	 
+	class Tool(ABC):
+	    """Abstract base class for all tools."""
+	 
+	    @classmethod
+	    @abstractmethod
+	    def name(cls) -> str:
+	        """Return the tool name."""
+	        pass
+	 
+	    @classmethod
+	    @abstractmethod
+	    def category(cls) -> str:
+	        """Return the tool category."""
+	        pass
+	 
+	    @classmethod
+	    @abstractmethod
+	    def description(cls) -> str:
+	        """Return a description of what the tool does."""
+	        pass
+	 
+	    @classmethod
+	    @abstractmethod
+	    def version(cls) -> str:
+	        """Return the tool version."""
+	        pass
+	 
+	    @abstractmethod
+	    def launch(self, value: str, *args, **kwargs) -> Any:
+	        """Execute the tool and return results."""
+	        pass
+	```
+
+### Access Dict by the `.get` method
+Always access dictionary elements by the `.get` method.
+
+### Utilize `getattr`
+	```python
+	# 🚫 Don't use this pattern
+	form_name = form.name if form else "Unknown Form"
+	
+	# ✅ Use this
+	form_name = getattr(form,"name", "Unknown Form") 
+	```
+### Enum member or value: use `getattr`
+When we need to be sure that we need the value string of an enum, but we are not sure that it can be an enum member, use this.
+	```python
+	raw = getattr(message, "value", message)
+	```
+### Use inline conditional key-value
+	```python
+	# 🚫 Don't use this pattern
+	my_dict = {}
+	if workflow:
+		my_dict["workflow_id"] = workflow.id
+
+	# ✅ Use this
+	my_dict = {
+		**({"workflow_id": workflow.id} if workflow else {})
+	}
+	```
+
+### Functional Core and Imperative Shell
+Separating your code into functional cores and imperative shells makes it more testable, maintainable, and adaptable. The core logic can be tested in isolation, and the imperati​​ve shell can be swapped out or modified as needed.
+A functional core should contain pure, testable business logic, which is free of side effects (such as I/O or external state mutation). It operates only on the data it is given.
+
+An imperative shell is responsible for side effects, like database calls and sending emails. It uses the functions in your functional core to perform the business logic.
+
+### Use Positive Booleans
+Make boolean checks about something positive rather than about something negative.
+1. Name your flags and variables in such a way that they represent the positive check you wish to make (the presence of something, something being enabled, something being true) rather than the negative check you wish to make (the absence of something, something being disabled, something being false).
+2. If your conditional looks like “if not … else …” then reverse it to put the positive case first.
+	```python
+	// ⛔ Bad
+	if not nodisable_kryponite_shield:
+	  devise_clever_escape_plan()
+	else:
+	  engage_in_epic_battle()
+  
+  // ✅ Good
+	if enable_kryponite_shield:
+	  engage_in_epic_battle()
+	else:
+	  devise_clever_escape_plan()
+<python_rules>  
+</Prompt>
